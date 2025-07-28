@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const AgreementRequest = () => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔵 Load pending requests
+  
   const fetchRequests = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/agreements/pending");
@@ -21,28 +22,53 @@ const AgreementRequest = () => {
     fetchRequests();
   }, []);
 
-  // ✅ Accept agreement request
+  
   const handleAccept = async (request) => {
-    try {
-      await axios.put(`http://localhost:5000/api/agreements/accept/${request._id}`, {
-        userEmail: request.userEmail,
-        apartmentNo: request.apartmentNo
-      });
-      alert("Accepted!");
-      fetchRequests();
-    } catch (err) {
-      alert("Accept failed");
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "You want to accept this agreement?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, accept it!",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await axios.put(`http://localhost:5000/api/agreements/accept/${request._id}`, {
+          userEmail: request.userEmail,
+          apartmentNo: request.apartmentNo,
+        });
+
+        Swal.fire("Accepted!", "Agreement has been accepted.", "success");
+        fetchRequests();
+      } catch (err) {
+        Swal.fire("Error", "Failed to accept agreement", "error");
+      }
     }
   };
 
-  // ❌ Reject agreement request
+  
   const handleReject = async (id) => {
-    try {
-      await axios.put(`http://localhost:5000/api/agreements/reject/${id}`);
-      alert("Rejected!");
-      fetchRequests();
-    } catch (err) {
-      alert("Reject failed");
+    const confirm = await Swal.fire({
+      title: "Reject Agreement?",
+      text: "This user will remain as a normal user.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#e74c3c",
+      cancelButtonColor: "#95a5a6",
+      confirmButtonText: "Yes, reject it!",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await axios.put(`http://localhost:5000/api/agreements/reject/${id}`);
+        Swal.fire("Rejected!", "Agreement has been rejected.", "success");
+        fetchRequests();
+      } catch (err) {
+        Swal.fire("Error", "Failed to reject agreement", "error");
+      }
     }
   };
 
