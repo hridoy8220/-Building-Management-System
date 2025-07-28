@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../Auth/AuthContext";
+import { toast } from "react-toastify"; 
 
 const Apartments = () => {
   const [apartments, setApartments] = useState([]);
@@ -30,6 +31,7 @@ const Apartments = () => {
       setTotal(res.data.total);
     } catch (err) {
       console.error("Error fetching apartments:", err);
+      toast.error("Failed to load apartments");
     } finally {
       setLoading(false);
     }
@@ -41,13 +43,10 @@ const Apartments = () => {
       const res = await axios.get("https://building-server-six.vercel.app/api/agreements", {
         params: { email: user.email },
       });
-      if (res.data?.agreement) {
-        setUserHasAgreement(true);
-      } else {
-        setUserHasAgreement(false);
-      }
+      setUserHasAgreement(!!res.data?.agreement);
     } catch (err) {
       console.error("Agreement check error:", err);
+      toast.error("Error checking agreement status");
     }
   };
 
@@ -76,10 +75,11 @@ const Apartments = () => {
         apartmentNo: apt.apartmentNo,
         rent: apt.rent,
       });
-      alert("Agreement submitted!");
+      toast.success("Agreement submitted!");
       setUserHasAgreement(true);
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to submit agreement");
+      const message = err.response?.data?.message || "Failed to submit agreement";
+      toast.error(message);
     }
   };
 
