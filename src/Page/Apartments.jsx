@@ -19,7 +19,7 @@ const Apartments = () => {
   const fetchApartments = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/apartments", {
+      const res = await axios.get("https://building-server-six.vercel.app/api/apartments", {
         params: {
           page,
           min: minRent || 0,
@@ -38,7 +38,7 @@ const Apartments = () => {
   const checkUserAgreement = async () => {
     if (!user?.email) return;
     try {
-      const res = await axios.get("http://localhost:5000/api/agreements", {
+      const res = await axios.get("https://building-server-six.vercel.app/api/agreements", {
         params: { email: user.email },
       });
       if (res.data?.agreement) {
@@ -68,7 +68,7 @@ const Apartments = () => {
     if (!user) return navigate("/login");
 
     try {
-      await axios.post("http://localhost:5000/api/agreements", {
+      await axios.post("https://building-server-six.vercel.app/api/agreements", {
         userName: user.displayName || user.name || "User",
         userEmail: user.email,
         floor: apt.floor,

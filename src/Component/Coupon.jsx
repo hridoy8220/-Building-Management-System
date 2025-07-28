@@ -6,7 +6,7 @@ const Coupon = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/coupons')
+    axios.get('https://building-server-six.vercel.app/api/coupons')
       .then((res) => setCoupons(res.data))
       .catch((err) => {
         console.error('Failed to fetch coupons', err);

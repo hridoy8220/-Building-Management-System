@@ -9,7 +9,7 @@ const AgreementRequest = () => {
   
   const fetchRequests = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/agreements/pending");
+      const res = await axios.get("https://building-server-six.vercel.app/api/agreements/pending");
       setRequests(res.data || []);
     } catch (err) {
       console.error("Error fetching requests", err);
@@ -36,7 +36,7 @@ const AgreementRequest = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.put(`http://localhost:5000/api/agreements/accept/${request._id}`, {
+        await axios.put(`https://building-server-six.vercel.app/api/agreements/accept/${request._id}`, {
           userEmail: request.userEmail,
           apartmentNo: request.apartmentNo,
         });
@@ -63,7 +63,7 @@ const AgreementRequest = () => {
 
     if (confirm.isConfirmed) {
       try {
-        await axios.put(`http://localhost:5000/api/agreements/reject/${id}`);
+        await axios.put(`https://building-server-six.vercel.app/api/agreements/reject/${id}`);
         Swal.fire("Rejected!", "Agreement has been rejected.", "success");
         fetchRequests();
       } catch (err) {

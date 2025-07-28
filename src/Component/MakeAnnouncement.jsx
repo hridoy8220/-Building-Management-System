@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const MakeAnnouncement = () => {
   const [title, setTitle] = useState("");
@@ -9,24 +10,24 @@ const MakeAnnouncement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !description) {
-      alert("Please fill in all fields.");
+      toast.warn("⚠️ Please fill in all fields");
       return;
     }
 
     setLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/announcements", {
+      await axios.post("https://building-server-six.vercel.app/api/announcements", {
         title,
         description,
         createdAt: new Date(),
       });
 
-      alert("Announcement created successfully!");
+      toast.success("📢 Announcement created successfully!");
       setTitle("");
       setDescription("");
     } catch (error) {
       console.error(error);
-      alert("Failed to create announcement.");
+      toast.error("❌ Failed to create announcement");
     } finally {
       setLoading(false);
     }

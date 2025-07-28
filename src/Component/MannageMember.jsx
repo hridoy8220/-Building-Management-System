@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const MannageMember = () => {
   const [members, setMembers] = useState([]);
@@ -9,10 +10,11 @@ const MannageMember = () => {
   const fetchMembers = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/members");
+      const res = await axios.get("https://building-server-six.vercel.app/api/members");
       setMembers(res.data);
     } catch (error) {
       console.error("Error fetching members", error);
+      Swal.fire("Error", "Failed to fetch members", "error");
     } finally {
       setLoading(false);
     }
@@ -20,17 +22,27 @@ const MannageMember = () => {
 
   // ❌ Remove member (update role to user)
   const handleRemove = async (email) => {
-    const confirm = window.confirm("Are you sure to remove this member?");
-    if (!confirm) return;
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to remove this member?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, remove!",
+      cancelButtonText: "Cancel",
+    });
 
-    try {
-      await axios.put(`http://localhost:5000/api/users/downgrade/${email}`);
-      alert("Member removed successfully.");
-      // Refresh member list
-      fetchMembers();
-    } catch (error) {
-      console.error("Remove failed", error);
-      alert("Failed to remove member.");
+    if (result.isConfirmed) {
+      try {
+        await axios.put(`https://building-server-six.vercel.app/api/users/downgrade/${email}`);
+        Swal.fire("Removed!", "Member removed successfully.", "success");
+        // Refresh member list
+        fetchMembers();
+      } catch (error) {
+        console.error("Remove failed", error);
+        Swal.fire("Error", "Failed to remove member.", "error");
+      }
     }
   };
 

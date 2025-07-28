@@ -15,7 +15,7 @@ const Dashboard = () => {
     const fetchUserRole = async () => {
       if (!user?.email) return;
       try {
-        const res = await fetch(`http://localhost:5000/api/users/${user.email}`);
+        const res = await fetch(`https://building-server-six.vercel.app/api/users/${user.email}`);
         const data = await res.json();
         setRole(data.role);
       } catch (error) {

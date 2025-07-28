@@ -45,7 +45,7 @@ const Register = () => {
       });
 
       // ✅ 3. Save to backend MongoDB
-      await axios.post("http://localhost:5000/api/register", {
+      await axios.post("https://building-server-six.vercel.app/api/register", {
         name,
         email,
         photo,

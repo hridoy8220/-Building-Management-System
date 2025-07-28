@@ -10,10 +10,10 @@ const ManageCupon = () => {
     description: ''
   });
 
-  // 🔄 Fetch all coupons
+  // Fetch all coupons
   const fetchCoupons = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/coupons');
+      const res = await axios.get('https://building-server-six.vercel.app/api/coupons');
       setCoupons(res.data);
     } catch (err) {
       console.error('Failed to fetch coupons', err);
@@ -24,17 +24,29 @@ const ManageCupon = () => {
     fetchCoupons();
   }, []);
 
-  // 📩 Submit new coupon
+  // Submit new coupon
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/coupons', formData);
+      await axios.post('https://building-server-six.vercel.app/api/coupons', formData);
       setShowModal(false);
       setFormData({ code: '', discount: '', description: '' });
       fetchCoupons(); // Refresh list
       alert("Coupon added successfully!");
     } catch (err) {
       alert("Failed to add coupon");
+    }
+  };
+
+  // Toggle coupon availability
+  const toggleAvailability = async (couponId, currentStatus) => {
+    try {
+      await axios.patch(`https://building-server-six.vercel.app/api/coupons/${couponId}`, {
+        available: !currentStatus,
+      });
+      fetchCoupons(); // Refresh list
+    } catch (err) {
+      alert('Failed to update availability');
     }
   };
 
@@ -50,7 +62,7 @@ const ManageCupon = () => {
         </button>
       </div>
 
-      {/* 📋 Coupon Table */}
+      {/* Coupon Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border rounded shadow">
           <thead className="bg-blue-600 text-white">
@@ -58,6 +70,8 @@ const ManageCupon = () => {
               <th className="p-3 text-left">Coupon Code</th>
               <th className="p-3 text-left">Discount (%)</th>
               <th className="p-3 text-left">Description</th>
+              <th className="p-3 text-left">Availability</th>
+              <th className="p-3 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -66,13 +80,30 @@ const ManageCupon = () => {
                 <td className="p-3">{coupon.code}</td>
                 <td className="p-3">{coupon.discount}</td>
                 <td className="p-3">{coupon.description}</td>
+                <td className="p-3">
+                  {coupon.available ? (
+                    <span className="text-green-600 font-semibold">Available</span>
+                  ) : (
+                    <span className="text-red-600 font-semibold">Unavailable</span>
+                  )}
+                </td>
+                <td className="p-3">
+                  <button
+                    onClick={() => toggleAvailability(coupon._id, coupon.available)}
+                    className={`px-3 py-1 rounded ${
+                      coupon.available ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
+                    } text-white`}
+                  >
+                    {coupon.available ? 'Deactivate' : 'Activate'}
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* 🪟 Modal */}
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded shadow-xl w-full max-w-md">

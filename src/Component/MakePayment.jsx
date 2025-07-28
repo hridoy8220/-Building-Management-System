@@ -17,7 +17,7 @@ const MakePayment = () => {
   useEffect(() => {
     if (user?.email) {
       axios
-        .get(`http://localhost:5000/api/member-agreement?email=${user.email}`)
+        .get(`https://building-server-six.vercel.app/api/member-agreement?email=${user.email}`)
         .then((res) => {
           if (res.data) setAgreement(res.data);
         })
@@ -28,7 +28,7 @@ const MakePayment = () => {
   // ✅ Fetch coupons
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/coupons")
+      .get("https://building-server-six.vercel.app/api/coupons")
       .then((res) => {
         if (Array.isArray(res.data)) {
           setAllCoupons(res.data);
@@ -44,7 +44,7 @@ const MakePayment = () => {
     if (user?.email && month) {
       axios
         .get(
-          `http://localhost:5000/api/payments/check?email=${user.email}&month=${month}`
+          `https://building-server-six.vercel.app/api/payments/check?email=${user.email}&month=${month}`
         )
         .then((res) => {
           setAlreadyPaid(res.data.paid);
@@ -87,7 +87,7 @@ const MakePayment = () => {
     };
 
     try {
-      await axios.post("http://localhost:5000/api/payments", paymentData);
+      await axios.post("https://building-server-six.vercel.app/api/payments", paymentData);
       setPaymentSuccess(true);
       setCoupon("");
       setValidCoupon(null);

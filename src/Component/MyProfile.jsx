@@ -15,14 +15,14 @@ const MyProfile = () => {
 
       try {
         // 1. Get user role
-        const roleRes = await axios.get(`http://localhost:5000/api/user-role`, {
+        const roleRes = await axios.get(`https://building-server-six.vercel.app/api/user-role`, {
           params: { email: user.email }
         });
         setRole(roleRes.data.role);
 
         // 2. If member, fetch agreement
         if (roleRes.data.role === 'member') {
-          const agreementRes = await axios.get(`http://localhost:5000/api/member-agreement`, {
+          const agreementRes = await axios.get(`https://building-server-six.vercel.app/api/member-agreement`, {
             params: { email: user.email }
           });
           setAgreement(agreementRes.data || null);
@@ -30,7 +30,7 @@ const MyProfile = () => {
 
         // 3. If admin, fetch admin dashboard info
         if (roleRes.data.role === 'admin') {
-          const adminRes = await axios.get(`http://localhost:5000/api/admin-dashboard-info`);
+          const adminRes = await axios.get(`https://building-server-six.vercel.app/api/admin-dashboard-info`);
           setAdminInfo(adminRes.data);
         }
       } catch (error) {

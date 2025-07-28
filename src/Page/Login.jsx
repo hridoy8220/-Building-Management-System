@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router'; // ✅ use react-router-dom
+import { Link, useNavigate } from 'react-router';
 import { FaGoogle } from 'react-icons/fa';
+import Swal from 'sweetalert2'; 
 import { AuthContext } from '../Auth/AuthContext';
 
 const Login = () => {
@@ -8,24 +9,34 @@ const Login = () => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     try {
       await signIn(formData.email, formData.password);
-      alert('✅ Login successful!');
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'Welcome back!',
+        confirmButtonColor: '#3085d6',
+      });
+
       navigate('/');
     } catch (err) {
       console.error(err);
-      setError('❌ Invalid email or password');
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Invalid email or password',
+        confirmButtonColor: '#d33',
+      });
     }
   };
 
@@ -33,10 +44,6 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">Welcome Back</h2>
-
-        {error && (
-          <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email */}
@@ -83,7 +90,7 @@ const Login = () => {
           <div className="flex-grow h-px bg-gray-300" />
         </div>
 
-        {/* Google Login (optional/future) */}
+        {/* Google Login (disabled) */}
         <button
           disabled
           className="w-full border border-gray-300 py-2 rounded-md flex items-center justify-center gap-2 bg-gray-100 cursor-not-allowed"
