@@ -1,11 +1,12 @@
 import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { FaGoogle } from 'react-icons/fa';
-import Swal from 'sweetalert2'; 
+import Swal from 'sweetalert2';
 import { AuthContext } from '../Auth/AuthContext';
+import axios from 'axios';
 
 const Login = () => {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, googleSignIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -20,14 +21,12 @@ const Login = () => {
 
     try {
       await signIn(formData.email, formData.password);
-
       Swal.fire({
         icon: 'success',
         title: 'Login Successful',
         text: 'Welcome back!',
         confirmButtonColor: '#3085d6',
       });
-
       navigate('/');
     } catch (err) {
       console.error(err);
@@ -40,13 +39,44 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await googleSignIn();
+      const user = result.user;
+
+      // ✅ Optional: Save to backend
+      await axios.post('https://building-server-six.vercel.app/api/register', {
+        name: user.displayName,
+        email: user.email,
+        photo: user.photoURL,
+        role: 'user',
+      });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: `Welcome, ${user.displayName}`,
+        confirmButtonColor: '#3085d6',
+      });
+
+      navigate('/');
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Google Sign-in Failed',
+        text: err.message,
+        confirmButtonColor: '#d33',
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">Welcome Back</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Email */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">Email</label>
             <input
@@ -60,7 +90,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Password */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">Password</label>
             <input
@@ -74,7 +103,6 @@ const Login = () => {
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
@@ -83,23 +111,20 @@ const Login = () => {
           </button>
         </form>
 
-        {/* OR divider */}
         <div className="flex items-center gap-2 my-4">
           <div className="flex-grow h-px bg-gray-300" />
           <p className="text-gray-500 text-sm">OR</p>
           <div className="flex-grow h-px bg-gray-300" />
         </div>
 
-        {/* Google Login (disabled) */}
         <button
-          disabled
-          className="w-full border border-gray-300 py-2 rounded-md flex items-center justify-center gap-2 bg-gray-100 cursor-not-allowed"
+          onClick={handleGoogleLogin}
+          className="w-full border border-gray-300 py-2 rounded-md flex items-center justify-center gap-2 hover:bg-gray-100 transition"
         >
           <FaGoogle className="text-red-500 text-lg" />
-          <span className="text-sm text-gray-700">Continue with Google (coming soon)</span>
+          <span className="text-sm text-gray-700">Continue with Google</span>
         </button>
 
-        {/* Register Redirect */}
         <p className="text-center mt-4 text-sm text-gray-600">
           Don't have an account?{' '}
           <Link to="/register" className="text-blue-500 hover:underline">

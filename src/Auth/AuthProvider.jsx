@@ -6,6 +6,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider,
 } from 'firebase/auth';
 import { auth } from './firebase.init';
 
@@ -28,7 +30,6 @@ const AuthProvider = ({ children }) => {
     return signOut(auth);
   };
 
-  // Optional: Update profile helper
   const updateUserProfile = (name, photoURL) => {
     if (auth.currentUser) {
       return updateProfile(auth.currentUser, {
@@ -39,14 +40,19 @@ const AuthProvider = ({ children }) => {
     return Promise.reject("No user is logged in");
   };
 
+  // 🔵 Google Sign In
+  const googleProvider = new GoogleAuthProvider();
+  const googleSignIn = () => {
+    setLoading(true);
+    return signInWithPopup(auth, googleProvider);
+  };
+
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
-    return () => {
-      unSubscribe();
-    };
+    return () => unSubscribe();
   }, []);
 
   const authInfo = {
@@ -55,8 +61,9 @@ const AuthProvider = ({ children }) => {
     createUser,
     signIn,
     logout,
-    updateUserProfile, // <-- expose update profile if needed
-    setLoading
+    updateUserProfile,
+    googleSignIn,
+    setLoading,
   };
 
   return (

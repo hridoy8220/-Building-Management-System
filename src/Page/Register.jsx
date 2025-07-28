@@ -1,8 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router'; // ✅ fixed import
+import { Link, useNavigate } from 'react-router';
 import { AuthContext } from '../Auth/AuthContext';
 import { updateProfile } from 'firebase/auth';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
   const { createUser } = useContext(AuthContext);
@@ -30,21 +33,23 @@ const Register = () => {
 
     const passwordValid = /^(?=.*[a-z])(?=.*[A-Z]).{6,}$/.test(password);
     if (!passwordValid) {
-      alert('Password must be at least 6 characters and include both uppercase and lowercase letters.');
+      toast.error('Password must contain uppercase, lowercase and be at least 6 characters.', {
+        position: 'top-center',
+      });
       return;
     }
 
     try {
-      // ✅ 1. Create user in Firebase
+      // Create user
       const userCredential = await createUser(email, password);
 
-      // ✅ 2. Update Firebase profile with name and photo
+      // Update profile
       await updateProfile(userCredential.user, {
         displayName: name,
         photoURL: photo
       });
 
-      // ✅ 3. Save to backend MongoDB
+      // Save to backend
       await axios.post("https://building-server-six.vercel.app/api/register", {
         name,
         email,
@@ -52,16 +57,30 @@ const Register = () => {
         role: "user"
       });
 
-      alert("User registered successfully!");
-      navigate("/");
+      // SweetAlert Success
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful',
+        text: 'Welcome to the platform!',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Go to Home'
+      }).then(() => {
+        navigate("/");
+      });
+
     } catch (error) {
       console.error(error);
-      alert("Registration failed: " + (error.response?.data?.message || error.message));
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: error.response?.data?.message || error.message || 'Something went wrong.',
+      });
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <ToastContainer />
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">Create an Account</h2>
 

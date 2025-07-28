@@ -18,11 +18,13 @@ import Announcement from "../Component/Announcement";
 import ManageCupon from "../Component/ManageCupon";
 import MakePayment from "../Component/MakePayment";
 import PaymentStory from "../Component/PaymentStory";
+import Error from "../Page/Error";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Root />,
+    errorElement:<Error></Error>,
     children: [
       {
         index: true,
