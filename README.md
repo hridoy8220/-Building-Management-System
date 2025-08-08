@@ -8,9 +8,11 @@ The Building Management System is a comprehensive web application designed to fa
 
 ---
 
-## Screenshot
+##Home Page:
 
 ![Building Management System Screenshot](https://i.ibb.co.com/SSHTg9F/Screenshot-2025-08-08-121642.png)  
+
+
 *Clean and responsive UI showcasing apartment listings and dashboard.*
 
 ---
