@@ -1,12 +1,49 @@
-# React + Vite
+# Building Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+The Building Management System is a comprehensive web application designed to facilitate smooth management of residential buildings. It connects tenants, members, and admins, enabling easy apartment listings, agreement handling, payments, announcements, and maintenance requests — all in one platform.
 
-Currently, two official plugins are available:
+**Live Project Link:**  
+[https://your-live-project-url.com](https://building-management-5fce2.web.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Screenshot
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+![Building Management System Screenshot](https://i.ibb.co.com/SSHTg9F/Screenshot-2025-08-08-121642.png)  
+*Clean and responsive UI showcasing apartment listings and dashboard.*
+
+---
+
+## Technologies Used
+- **Frontend:** React, React Router, Tailwind CSS  
+- **Backend:** Node.js, Express.js  
+- **Database:** MongoDB  
+- **Authentication:** Firebase Authentication  
+- **Deployment:** Vercel / Netlify (update as per your setup)  
+
+---
+
+## Core Features
+- Role-based dashboards (Tenant, Member, Admin)  
+- Apartment browsing with detailed information  
+- Agreement request submission and management  
+- Rent payment system with coupon code support  
+- Building-wide announcements and notifications  
+- Maintenance request submission and tracking  
+- Secure user authentication and authorization  
+- Responsive design for mobile and desktop  
+
+---
+
+## Dependencies
+- React  
+- React Router DOM  
+- Tailwind CSS  
+- Firebase  
+- Axios  
+- Express  
+- Mongoose  
+- dotenv  
+
+---
